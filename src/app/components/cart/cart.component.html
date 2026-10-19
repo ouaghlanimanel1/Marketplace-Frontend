@@ -1,0 +1,100 @@
+<div class="cart-page-wrapper">
+  <div class="cart-container">
+    <h1 class="cart-title">Votre Panier 🛒</h1>
+
+    <ng-container *ngIf="(cartItems$ | async) as cartItems">
+      <div *ngIf="cartItems.length > 0; else emptyCart">
+        <div class="cart-items-list">
+          <div *ngFor="let item of cartItems" class="cart-item-card">
+            <!-- Product Image -->
+            <div class="cart-item-image-container">
+              <img
+                *ngIf="item.imageUrl"
+                [src]="'http://localhost:8083' + item.imageUrl"
+                [alt]="item.name"
+                class="cart-item-image"
+              />
+              <div *ngIf="!item.imageUrl" class="no-image-placeholder">
+                <i class="fas fa-image"></i>
+                <span>Pas d'image</span>
+              </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="cart-item-details">
+              <h2 class="cart-item-name">
+                <a [routerLink]="['/products', item.productId]">{{ item.name }}</a>
+              </h2>
+              <p class="cart-item-unit-price">{{ item.price | number:'1.2-2' }} DT / unité</p>
+
+              <div class="cart-item-controls">
+                <div class="quantity-control">
+                  <button
+                    type="button"
+                    class="quantity-button"
+                    (click)="decrementQuantity(item)"
+                    [disabled]="item.quantity <= 1"
+                  >
+                    −
+                  </button>
+
+                  <span class="quantity-display">{{ item.quantity }}</span>
+
+                  <button
+                    type="button"
+                    class="quantity-button"
+                    (click)="incrementQuantity(item)"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  (click)="onRemoveItem(item.productId)"
+                  class="remove-item-button"
+                >
+                  <i class="fas fa-trash-alt"></i> Supprimer
+                </button>
+              </div>
+            </div>
+
+            <!-- Item Total Price -->
+            <p class="cart-item-total">
+              {{ item.price * item.quantity | number:'1.2-2' }} DT
+            </p>
+          </div>
+        </div>
+
+        <div class="cart-summary-section">
+          <h2 class="summary-title">Résumé de la Commande</h2>
+          <div class="summary-details">
+            <p>Nombre d'articles : <span>{{ cartTotalItems }}</span></p>
+            <p class="total-price">
+              Total à payer :
+              <span>{{ (cartTotalPrice$ | async) | number:'1.2-2' }} DT</span>
+            </p>
+          </div>
+
+          <div class="cart-actions-bottom">
+            <button class="checkout-button" (click)="goToCheckout()" type="button">
+              Passer à la caisse
+            </button>
+            <button class="clear-cart-button" (click)="onClearCart()" type="button">
+              Vider le panier
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #emptyCart>
+        <div class="empty-cart-message">
+          <p>Votre panier est vide. 😢</p>
+          <button class="continue-shopping-button" (click)="continueShopping()" type="button">
+            Continuer mes achats
+          </button>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+<div class="register-page-wrapper">
+  <div class="register-card">
+    <div class="register-visual">
+      <div class="register-visual-overlay">
+        <h1 class="brand-kicker">Rejoignez</h1>
+        <h2 class="brand-title">Marketplace</h2>
+        <p class="brand-subtitle">
+          Créez votre compte acheteur ou vendeur et commencez dès maintenant.
+        </p>
+      </div>
+    </div>
+
+    <div class="register-container">
+      <form class="register-form" (ngSubmit)="onSubmit()" #regForm="ngForm">
+        <div class="form-header">
+          <h2 class="form-title">Créez un compte</h2>
+          <p class="form-subtitle">Rejoignez notre communauté en quelques étapes.</p>
+        </div>
+
+        <div class="input-group" [class.has-error]="emailInput.invalid && emailInput.touched">
+          <label for="usernameOrEmail">Email</label>
+          <input
+            type="email"
+            id="usernameOrEmail"
+            placeholder="votre.email@exemple.com"
+            [(ngModel)]="usernameOrEmail"
+            name="usernameOrEmail"
+            required
+            email
+            autocomplete="email"
+            #emailInput="ngModel"
+          />
+          <div class="field-error" *ngIf="emailInput.invalid && emailInput.touched">
+            Veuillez saisir une adresse email valide.
+          </div>
+        </div>
+
+        <div class="input-group" [class.has-error]="passwordInput.invalid && passwordInput.touched">
+          <label for="password">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Minimum 6 caractères"
+            [(ngModel)]="password"
+            name="password"
+            required
+            minlength="6"
+            autocomplete="new-password"
+            #passwordInput="ngModel"
+          />
+          <div class="field-error" *ngIf="passwordInput.invalid && passwordInput.touched">
+            Le mot de passe doit contenir au moins 6 caractères.
+          </div>
+        </div>
+
+        <div class="input-group" [class.has-error]="passwordMismatch">
+          <label for="confirmPassword">Confirmer le mot de passe</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirmez votre mot de passe"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            required
+            autocomplete="new-password"
+            (ngModelChange)="checkPasswords()"
+          />
+          <div class="field-error" *ngIf="passwordMismatch">
+            Les mots de passe ne correspondent pas.
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="role">Quel est votre rôle ?</label>
+          <div class="select-wrapper">
+            <select id="role" [(ngModel)]="role" name="role" required>
+              <option value="CLIENT">Acheteur</option>
+              <option value="SELLER">Vendeur</option>
+            </select>
+            <span class="select-arrow"></span>
+          </div>
+        </div>
+
+        <button
+          class="register-button"
+          type="submit"
+          [disabled]="regForm.invalid || passwordMismatch"
+        >
+          S'inscrire
+        </button>
+
+        <div class="form-footer">
+          <p class="login-text">
+            Vous avez déjà un compte ? <a routerLink="/login" class="login-link">Connectez-vous ici</a>
+          </p>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

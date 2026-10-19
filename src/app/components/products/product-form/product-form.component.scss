@@ -1,0 +1,244 @@
+/* Palette locale alignée avec les autres formulaires */
+$primary-color: #2563eb;
+$primary-color-darker: #1d4ed8;
+$secondary-color: #64748b;
+$background-color: #f1f5f9;
+$card-background: #ffffff;
+$border-color: #cbd5f5;
+$text-color: #0f172a;
+$focus-shadow: rgba(37, 99, 235, 0.25);
+$error-color: #dc2626;
+
+.product-form-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: calc(100vh - 72px);
+  padding: 48px 16px;
+  background: radial-gradient(circle at top, #eef4ff 0, $background-color 40%, #f9fafb 100%);
+}
+
+.product-form-container {
+  background-color: $card-background;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  max-width: 600px; /* Wider for better form layout */
+  width: 90%;
+  text-align: center;
+  animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-header {
+  margin-bottom: 30px;
+}
+
+.form-title {
+  font-size: 2.2em;
+  color: #0a0560;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.form-subtitle {
+  font-size: 1.1em;
+  color: $secondary-color;
+  margin-bottom: 0;
+}
+
+.form-group {
+  margin-bottom: 25px;
+  text-align: left;
+
+  &.has-error input,
+  &.has-error textarea,
+  &.has-error select {
+    border-color: $error-color;
+    box-shadow: 0 0 0 0.12rem rgba(220, 38, 38, 0.15);
+  }
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color:#0a0560;
+  font-size: 0.95em;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 14px 15px;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+.form-group textarea {
+  resize: vertical; /* Allow vertical resizing */
+  min-height: 100px; /* Minimum height for description */
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #a0a0a0;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: $primary-color;
+  box-shadow: 0 0 0 0.25rem $focus-shadow;
+  outline: none;
+}
+
+/* Custom select arrow */
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select-wrapper select {
+  padding-right: 40px; /* Make space for the arrow */
+  appearance: none; /* Remove default select arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid $secondary-color;
+  pointer-events: none;
+}
+
+/* File input styling (can be tricky to style uniformly across browsers) */
+.form-group input[type="file"] {
+  padding: 10px 0; /* Adjust padding for file input */
+  border: 1px solid $border-color; /* Add border to make it visually consistent */
+  border-radius: 8px;
+  background-color: var(--background-color); /* Light background */
+}
+
+.form-group input[type="file"]::-webkit-file-upload-button {
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 15px;
+}
+
+.form-group input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: $primary-color-darker;
+}
+
+/* Fallback for other browsers (Firefox) */
+.form-group input[type="file"]::file-selector-button {
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-right: 15px;
+}
+
+.form-group input[type="file"]::file-selector-button:hover {
+  background-color: $primary-color-darker;
+}
+
+
+.input-hint {
+  font-size: 0.85em;
+  color: $secondary-color;
+  margin-top: 5px;
+  text-align: left;
+}
+
+.field-error {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: $error-color;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, $primary-color, $primary-color-darker);
+  color: #f9fafb;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.15s ease;
+  margin-top: 25px;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+}
+
+.submit-button:hover {
+  background-color: $primary-color-darker;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.3);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .product-form-container {
+    padding: 30px;
+    margin: 20px;
+  }
+
+  .form-title {
+    font-size: 2em;
+  }
+
+  .form-subtitle {
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-form-container {
+    padding: 20px;
+  }
+
+  .form-title {
+    font-size: 1.8em;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select,
+  .submit-button {
+    padding: 12px;
+    font-size: 1em;
+  }
+}

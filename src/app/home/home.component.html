@@ -1,0 +1,215 @@
+<div class="home-container">
+  <!-- Decorative background -->
+  <div class="bg-grain"></div>
+  <div class="bg-blob blob-1"></div>
+  <div class="bg-blob blob-2"></div>
+  <div class="bg-blob blob-3"></div>
+
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="hero-glow"></div>
+    <div class="hero-inner">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Votre boutique en ligne locale
+      </div>
+      <h1 class="hero-title">
+        Bienvenue sur
+        <span class="hero-highlight">MarketEase</span>
+      </h1>
+      <p class="hero-subtitle">
+        Trouvez les meilleures offres et produits près de chez vous, en quelques clics seulement.
+      </p>
+
+      <div class="hero-actions">
+        <button type="button" class="hero-button primary" (click)="resetFilter()">
+          <span class="btn-icon">&#10132;</span>
+          Découvrir les produits
+        </button>
+        <button type="button" class="hero-button ghost" routerLink="/login">
+          <span class="btn-icon">+</span>
+          Vendre un produit
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Chargement -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner-ring">
+      <div class="spinner"></div>
+      <div class="spinner spinner-inner"></div>
+    </div>
+    <p class="loading-text">Chargement des produits...</p>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="error-card">
+    <div class="error-icon-wrap">
+      <span class="error-icon">!</span>
+    </div>
+    <p class="error-text">{{ errorMessage }}</p>
+    <button type="button" (click)="loadAllProducts()" class="retry-button">
+      <span>&#8635;</span> Réessayer
+    </button>
+  </div>
+
+  <!-- Filtres + Recherche -->
+  <section
+    class="filter-section"
+    *ngIf="!loading && !errorMessage && allProducts.length > 0"
+  >
+    <!-- Search bar -->
+    <div class="search-wrapper">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Rechercher un produit..."
+        aria-label="Rechercher un produit"
+        [(ngModel)]="searchQuery"
+        (input)="filterProducts()"
+      />
+      <button
+        *ngIf="searchQuery"
+        type="button"
+        class="search-clear"
+        aria-label="Effacer la recherche"
+        (click)="searchQuery = ''; filterProducts()"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Category pills -->
+    <div class="category-pills">
+      <button
+        class="category-pill"
+        [class.active]="selectedCategory === ''"
+        (click)="onCategoryFilterChangeCustom('')"
+        type="button"
+      >
+        Tout voir
+      </button>
+      <button
+        *ngFor="let category of uniqueCategories"
+        class="category-pill"
+        [class.active]="selectedCategory === category"
+        (click)="onCategoryFilterChangeCustom(category)"
+        type="button"
+      >
+        {{ category }}
+      </button>
+    </div>
+  </section>
+
+  <!-- Carte produit réutilisable (évite la duplication) -->
+  <ng-template #productCardTpl let-product let-i="i" let-fallback="fallback">
+    <article
+      class="product-card"
+      role="link"
+      tabindex="0"
+      [style.animation-delay]="(i % 12) * 70 + 'ms'"
+      (click)="goToDetails(product.id)"
+      (keydown.enter)="goToDetails(product.id)"
+    >
+      <div class="card-visual">
+        <img
+          *ngIf="product.imageUrl"
+          [src]="'http://localhost:8083' + product.imageUrl"
+          [alt]="product.name"
+          loading="lazy"
+          class="card-image"
+        />
+        <div *ngIf="!product.imageUrl" class="card-placeholder">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        </div>
+        <span class="card-tag">{{ product.category || fallback || 'Produit' }}</span>
+      </div>
+      <div class="card-content">
+        <h3 class="card-title">{{ product.name }}</h3>
+        <p class="card-desc">{{ product.description }}</p>
+        <div class="card-bottom">
+          <span class="card-price">{{ product.price | number: '1.2-2' }} <small>DT</small></span>
+          <span class="card-link">Détails &rarr;</span>
+        </div>
+      </div>
+    </article>
+  </ng-template>
+
+  <!-- Résultats -->
+  <section class="products-section" *ngIf="!loading && !errorMessage">
+    <!-- No products -->
+    <div *ngIf="filteredProducts.length === 0" class="empty-state">
+      <div class="empty-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      </div>
+      <h3>Aucun produit trouvé</h3>
+      <p>
+        <span *ngIf="selectedCategory">dans la catégorie « {{ selectedCategory }} »</span>
+        <span *ngIf="searchQuery"> avec la recherche « {{ searchQuery }} »</span>
+      </p>
+      <button type="button" class="reset-btn" (click)="resetFilter()">Réinitialiser les filtres</button>
+    </div>
+
+    <!-- Filtered view -->
+    <ng-container *ngIf="selectedCategory || searchQuery; else allCategoriesView">
+      <div class="results-header" *ngIf="filteredProducts.length > 0">
+        <h2 class="section-title">
+          <span *ngIf="selectedCategory">{{ selectedCategory }}</span>
+          <span *ngIf="!selectedCategory">Résultats</span>
+        </h2>
+        <span class="results-count">{{ filteredProducts.length }} produit{{ filteredProducts.length > 1 ? 's' : '' }}</span>
+      </div>
+      <div class="product-grid">
+        <ng-container *ngFor="let product of filteredProducts; let i = index">
+          <ng-container
+            *ngTemplateOutlet="productCardTpl; context: { $implicit: product, i: i, fallback: selectedCategory }"
+          ></ng-container>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <!-- Grouped by categories -->
+    <ng-template #allCategoriesView>
+      <div *ngFor="let category of categoryGroups | keyvalue" class="category-block">
+        <div class="category-header">
+          <h2 class="section-title">{{ category.key }}</h2>
+          <span class="cat-count">{{ category.value.length }} produit{{ category.value.length > 1 ? 's' : '' }}</span>
+        </div>
+        <div class="product-grid">
+          <ng-container *ngFor="let product of category.value; let i = index">
+            <ng-container
+              *ngTemplateOutlet="productCardTpl; context: { $implicit: product, i: i, fallback: category.key }"
+            ></ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </ng-template>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0 60V20C240 0 480 40 720 30C960 20 1200 0 1440 20V60H0Z" fill="currentColor"/>
+      </svg>
+    </div>
+    <div class="footer-content">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <h3>MarketEase</h3>
+          <p>Votre boutique locale en ligne</p>
+        </div>
+        <nav class="footer-links">
+          <a href="#" (click)="$event.preventDefault()">À propos</a>
+          <a href="#" (click)="$event.preventDefault()">Contact</a>
+          <a href="#" (click)="$event.preventDefault()">Confidentialité</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 MarketEase. Tous droits réservés.</p>
+      </div>
+    </div>
+  </footer>
+</div>

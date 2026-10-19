@@ -1,0 +1,43 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <div class="navbar-brand">
+      <img src="assets/c__Users_ouagh_AppData_Roaming_Cursor_User_workspaceStorage_76145dc0948a7d3b103de0492159154a_images_Ocean_Blue_Gradated_Logo_for_MarketEase-7c002ccf-84de-41cd-bdfa-66f20eec7ed1.png" alt="MarketEase" class="navbar-logo">
+      <h3 class="navbar-title">Marketplace</h3>
+    </div>
+
+    <!-- Liens -->
+    <ul [class.open]="menuOpen" class="navbar-links">
+      <li><a routerLink="/home" routerLinkActive="active" (click)="closeMenu()">Home</a></li>
+
+      <!-- Seller -->
+      <li *ngIf="authService.isSeller()">
+        <a routerLink="/add-product" routerLinkActive="active" (click)="closeMenu()">Ajouter produit</a>
+      </li>
+      <li *ngIf="authService.isSeller()">
+        <a routerLink="/products" routerLinkActive="active" (click)="closeMenu()">Mes articles</a>
+      </li>
+
+      <li class="nav-item cart-icon" *ngIf="authService.isClient()">
+        <a routerLink="/panier" (click)="closeMenu()">
+          🛒 Panier <span *ngIf="cartCount > 0" class="cart-badge">{{ cartCount }}</span>
+        </a>
+      </li>
+
+      <!-- Connexion / Déconnexion -->
+      <li *ngIf="!authService.isLoggedIn()">
+        <a routerLink="/login" routerLinkActive="active" (click)="closeMenu()">Se connecter</a>
+      </li>
+      <li *ngIf="authService.isLoggedIn()">
+        <a href="#" (click)="logout()">Déconnexion</a>
+      </li>
+    </ul>
+
+    <!-- Hamburger button for mobile -->
+    <button class="hamburger" (click)="menuOpen = !menuOpen" [class.active]="menuOpen" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</nav>

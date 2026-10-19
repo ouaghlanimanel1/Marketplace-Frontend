@@ -1,0 +1,236 @@
+/* ═══════════════════════════════════════════
+   NAVBAR — Ocean Blue Theme
+   Sticky glassmorphism with responsive hamburger
+   ═══════════════════════════════════════════ */
+
+// ── Ocean Blue Design Tokens ──────────────────────────────────────────────────
+:host {
+  --cyan:        #00BFFF;
+  --blue:        #0088DD;
+  --navy:        #0a1f44;
+  --white:       #ffffff;
+  --white-dim:   rgba(255, 255, 255, 0.72);
+  --hover-bg:    rgba(255, 255, 255, 0.08);
+  --active-grad: linear-gradient(135deg, #00BFFF, #0088DD);
+  --transition:  0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ── Navbar Shell ─────────────────────────────────────────────────────────────
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(10, 31, 68, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08),
+    0 4px 20px rgba(0, 0, 0, 0.3);
+  font-family: 'Outfit', 'Nunito Sans', system-ui, -apple-system, sans-serif;
+}
+
+// ── Inner Container ───────────────────────────────────────────────────────────
+.navbar-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+// ── Brand / Logo ──────────────────────────────────────────────────────────────
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.navbar-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.navbar-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  background: linear-gradient(135deg, #ffffff 30%, #00BFFF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ── Nav Links (desktop) ───────────────────────────────────────────────────────
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    position: relative;
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.85rem;
+    color: var(--white-dim);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: background var(--transition), color var(--transition);
+    white-space: nowrap;
+    position: relative;
+
+    &:hover {
+      background: var(--hover-bg);
+      color: var(--white);
+    }
+
+    &.active {
+      background: var(--active-grad);
+      color: var(--white);
+      font-weight: 600;
+      box-shadow: 0 2px 12px rgba(0, 191, 255, 0.25);
+    }
+  }
+}
+
+// ── Cart Badge ────────────────────────────────────────────────────────────────
+.cart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 999px;
+  line-height: 1;
+  box-shadow: 0 1px 4px rgba(239, 68, 68, 0.5);
+}
+
+// ── Hamburger Button ──────────────────────────────────────────────────────────
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: var(--hover-bg);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background var(--transition);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+
+  span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition:
+      transform var(--transition),
+      opacity var(--transition),
+      width var(--transition);
+    transform-origin: center;
+  }
+
+  // Animate to X when active
+  &.active {
+    span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+    span:nth-child(2) {
+      opacity: 0;
+      width: 0;
+    }
+    span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+  }
+}
+
+// ── Responsive — Mobile ───────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .navbar-container {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 0.75rem 1.25rem;
+    gap: 0;
+  }
+
+  .navbar-brand {
+    flex: 1;
+    padding: 0.2rem 0;
+  }
+
+  .navbar-links {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.2rem;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    transition:
+      max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+      padding 0.35s ease;
+
+    &.open {
+      max-height: 480px;
+      padding: 0.6rem 0 0.75rem;
+    }
+
+    li {
+      width: 100%;
+    }
+
+    a {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      font-size: 0.95rem;
+      border-radius: 10px;
+      color: var(--white-dim);
+
+      &:hover,
+      &.active {
+        color: var(--white);
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-title {
+    font-size: 1.1rem;
+  }
+}

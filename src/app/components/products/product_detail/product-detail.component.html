@@ -1,0 +1,97 @@
+<div class="product-detail-page-wrapper">
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Chargement des détails du produit...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    <p class="error-icon">⚠️</p>
+    <p>{{ errorMessage }}</p>
+    <button (click)="retryLoad()" class="retry-button">Réessayer</button>
+  </div>
+
+  <div *ngIf="product" class="product-detail-container">
+    <div class="product-header">
+      <h1 class="product-name">{{ product.name }}</h1>
+      <p class="product-category">Catégorie : {{ product.category || 'Non spécifiée' }}</p>
+    </div>
+
+    <div class="product-content">
+      <div class="product-image-gallery">
+        <img
+          *ngIf="product?.imageUrl"
+          [src]="'http://localhost:8083' + product.imageUrl"
+          alt="{{ product.name }}"
+          class="main-product-image"
+        />
+      </div>
+
+      <div class="product-info">
+        <div class="price-section">
+          <p class="product-price">{{ product.price | number:'1.2-2' }} DT</p>
+        </div>
+
+        <div class="description-section">
+          <h3 class="section-title">Description</h3>
+          <p class="product-description">{{ product.description }}</p>
+        </div>
+        
+
+        <div class="action-buttons">
+          <button
+            class="add-to-cart-button"
+            (click)="addToCart(product)"
+            *ngIf="!authService.isSeller()"
+          >
+            Ajouter au panier 🛒
+          </button>
+
+          <ng-container *ngIf="canManageProduct">
+            <button class="manage-button edit-button" (click)="editProduct()">
+              Modifier le produit
+            </button>
+            <button class="manage-button delete-button" (click)="deleteProduct()">
+              Supprimer le produit
+            </button>
+          </ng-container>
+        </div>
+
+        <div class="seller-info-section">
+          <h3 class="section-title">Vendu par</h3>
+          <p>
+            <ng-container *ngIf="product.sellerId; else noSellerLink">
+              <a [routerLink]="['/seller', product.sellerId]" class="seller-link">
+                {{ product.sellerName || 'Vendeur non spécifié' }}
+              </a>
+            </ng-container>
+            <ng-template #noSellerLink>
+              <span class="seller-name-text">{{ product.sellerName || 'Vendeur non spécifié' }}</span>
+            </ng-template>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showPopup" class="add-to-cart-popup-overlay" [class.show]="showPopup">
+    <div class="add-to-cart-popup-content">
+      <div class="popup-header">
+        <h3 class="popup-title">Produit ajouté au panier !</h3>
+        <button class="close-popup-button" (click)="closePopup()">×</button>
+      </div>
+      <div class="popup-body">
+        <p class="popup-message">
+          <span class="product-name-in-popup">{{ product?.name }}</span> a été ajouté à votre panier avec succès.
+        </p>
+        <div class="popup-actions">
+          <button class="continue-shopping-button" (click)="closePopup()">
+            Continuer mes achats
+          </button>
+          <button class="go-to-cart-button" (click)="goToCart()">
+            Voir le panier 🛒
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
