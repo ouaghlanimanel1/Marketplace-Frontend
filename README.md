@@ -2,7 +2,7 @@
 # Marketplace Frontend
 
 ## Overview
-A full-stack marketplace web application frontend developed with Angular and TypeScript. The application provides a user interface for interacting with marketplace features.
+A modern web application built with Angular and TypeScript. Inspired by Facebook Marketplace, this project features a dynamic user interface for browsing listings, managing user-generated items, and facilitating direct interactions between buyers and sellers.
 
 ## Features
 - User interface for browsing products
